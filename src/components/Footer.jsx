@@ -1,18 +1,18 @@
-import React from 'react'
+import { TEAM_MEMBERS, TEAM_NUMBER } from '../data/team';
+import './Footer.css';
 
 const Footer = () => {
   return (
-    <div>
-        <h2>Miembros del equipo:</h2>
-        <ul>
-            <li>Javier García</li>
-            <li>Javier López</li>
-            <li>Javier Martínez</li>
-            <li>Javier Pérez</li>
-            <li>Javier Rodríguez</li>
-        </ul>
-    </div>
-  )
-}
+    <footer className="site-footer">
+      <h2>Equipo {TEAM_NUMBER}</h2>
+      <p>Miembros del equipo:</p>
+      <ul>
+        {TEAM_MEMBERS.map(member => (
+          <li key={member.name}>{member.name}</li>
+        ))}
+      </ul>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;

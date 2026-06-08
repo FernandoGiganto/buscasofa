@@ -8,6 +8,7 @@ const PAGE_SIZE = 20;
 const FuelTable = ({ stations }) => {
 
   // Filtros
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedFuel, setSelectedFuel] = useState('');
@@ -39,15 +40,26 @@ const FuelTable = ({ stations }) => {
 
   // Filtrado
   const filteredStations = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLocaleLowerCase('es');
+
     return stations.filter(station => {
+      const searchableText = [
+        station['Rótulo'],
+        station['Dirección'],
+        station.Municipio,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLocaleLowerCase('es');
+      const matchSearch = !normalizedSearch || searchableText.includes(normalizedSearch);
       const matchProvince = !selectedProvince || station.Provincia === selectedProvince;
       const matchCity = !selectedCity || station.Municipio === selectedCity;
       const matchFuel =
         !selectedFuel ||
         (station[selectedFuel] && station[selectedFuel].replace(',', '.') !== '' && station[selectedFuel] !== '-');
-      return matchProvince && matchCity && matchFuel;
+      return matchSearch && matchProvince && matchCity && matchFuel;
     });
-  }, [stations, selectedProvince, selectedCity, selectedFuel]);
+  }, [stations, searchTerm, selectedProvince, selectedCity, selectedFuel]);
 
   // Ordenación
   const sortedStations = useMemo(() => {
@@ -60,7 +72,7 @@ const FuelTable = ({ stations }) => {
   }, [filteredStations, sortField, sortOrder, selectedFuel]);
 
   // Paginación
-  const totalPages = Math.ceil(sortedStations.length / PAGE_SIZE);
+  const totalPages = Math.max(1, Math.ceil(sortedStations.length / PAGE_SIZE));
   const paginatedStations = sortedStations.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
@@ -76,10 +88,26 @@ const FuelTable = ({ stations }) => {
     }
   };
 
+  const handleProvinceChange = (province: string) => {
+    setSelectedProvince(province);
+    setSelectedCity('');
+  };
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setSelectedProvince('');
+    setSelectedCity('');
+    setSelectedFuel('');
+  };
+
+  const hasActiveFilters = Boolean(
+    searchTerm || selectedProvince || selectedCity || selectedFuel
+  );
+
   // Reset página al cambiar filtros
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedProvince, selectedCity, selectedFuel]);
+  }, [searchTerm, selectedProvince, selectedCity, selectedFuel]);
 
 
   return (
@@ -88,13 +116,20 @@ const FuelTable = ({ stations }) => {
       <FuelFilters
         provinces={provinces}
         cities={cities}
+        searchTerm={searchTerm}
         selectedProvince={selectedProvince}
         selectedCity={selectedCity}
         selectedFuel={selectedFuel}
-        onProvinceChange={setSelectedProvince}
+        hasActiveFilters={hasActiveFilters}
+        onSearchChange={setSearchTerm}
+        onProvinceChange={handleProvinceChange}
         onCityChange={setSelectedCity}
         onFuelChange={setSelectedFuel}
+        onClear={clearFilters}
       />
+      <p className="results-count" data-cy="results-count" aria-live="polite">
+        {sortedStations.length} {sortedStations.length === 1 ? 'gasolinera encontrada' : 'gasolineras encontradas'}
+      </p>
       <table className="fuel-table">
         <thead>
           <tr>
@@ -121,6 +156,13 @@ const FuelTable = ({ stations }) => {
           </tr>
         </thead>
         <tbody>
+          {paginatedStations.length === 0 && (
+            <tr>
+              <td className="empty-results" colSpan={6}>
+                No hay gasolineras que coincidan con los filtros.
+              </td>
+            </tr>
+          )}
           {paginatedStations.map((station, idx) => (
             <tr key={station.IDEESS || idx}>
               <td>{station['Rótulo']}</td>
