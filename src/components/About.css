@@ -1,9 +1,41 @@
 @import '../styles/variables.css';
 
 .about-container {
+  max-width: 900px;
+  margin: 0 auto;
   background: var(--surface);
   color: var(--text);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(37, 69, 71, 0.12);
+}
+
+.about-kicker {
+  margin: 0;
+  color: var(--secondary);
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.team-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.team-member {
+  padding: 1.25rem;
+  background: var(--white);
+  border-left: 5px solid var(--primary);
+  border-radius: 4px;
+}
+
+.team-member h2,
+.team-member p {
+  margin: 0;
+}
+
+.team-member p {
+  margin-top: 0.75rem;
 }
