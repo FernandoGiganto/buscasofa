@@ -47,10 +47,17 @@ const FuelFilters: React.FC<FuelFiltersProps> = ({
                 value={selectedProvince}
                 onChange={e => onProvinceChange(e.target.value)}
             >
+<<<<<<< HEAD
             <option value="">Provincia</option>
             {provinces.map(prov => (
                 <option key={prov} value={prov}>{prov}</option>
             ))}
+=======
+                <option value="">Provincia</option>
+                {provinces.map(prov => (
+                    <option key={prov} value={prov}>{prov}</option>
+                ))}
+>>>>>>> b070265 (pruebas nuevas)
             </select>
         </label>
         <label>
@@ -60,10 +67,17 @@ const FuelFilters: React.FC<FuelFiltersProps> = ({
                 value={selectedCity}
                 onChange={e => onCityChange(e.target.value)}
             >
+<<<<<<< HEAD
             <option value="">Ciudad</option>
             {cities.map(city => (
                 <option key={city} value={city}>{city}</option>
             ))}
+=======
+                <option value="">Ciudad</option>
+                {cities.map(city => (
+                    <option key={city} value={city}>{city}</option>
+                ))}
+>>>>>>> b070265 (pruebas nuevas)
             </select>
         </label>
         <label>
@@ -73,9 +87,15 @@ const FuelFilters: React.FC<FuelFiltersProps> = ({
                 value={selectedFuel}
                 onChange={e => onFuelChange(e.target.value)}
             >
+<<<<<<< HEAD
             <option value="">Tipo de combustible</option>
             <option value="Precio Gasoleo A">Gasóleo A</option>
             <option value="Precio Gasolina 95 E5">Gasolina 95 E5</option>
+=======
+                <option value="">Tipo de combustible</option>
+                <option value="Precio Gasoleo A">Gasóleo A</option>
+                <option value="Precio Gasolina 95 E5">Gasolina 95 E5</option>
+>>>>>>> b070265 (pruebas nuevas)
             </select>
         </label>
         <button
